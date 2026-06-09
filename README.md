@@ -99,7 +99,8 @@ crown/
   cli.py          the `crown` command-line interface
   generators.py   structured test/demo instances
 examples/demo.py  six end-to-end regimes
-benchmarks/       benchmark harness + RESULTS.md
+benchmarks/       self-benchmark (RESULTS.md) + SOTA comparison (compare.py,
+                  external_solvers.py, instances.py, EXTERNAL_RESULTS.md)
 tests/            36 soundness + correctness tests (validated vs brute force)
 ```
 
@@ -121,16 +122,41 @@ full table in **[benchmarks/RESULTS.md](benchmarks/RESULTS.md)**):
 - **Scale:** on 40 instances beyond brute-force reach (up to 2⁴⁴), CROWN
   returned a **certified** optimum **95%** of the time — proofs, not guesses.
 
-A simulated-annealing baseline reached the same optima at these sizes, but with
-*no proof of optimality* — CROWN's contribution is the certificate, not the
-search. External solvers (Gurobi / QPBO / dwave-neal) plug in via
-`EXTERNAL_SOLVERS` for head-to-head comparison.
+### Validated against state-of-the-art
 
-## Status
+`python benchmarks/compare.py` runs CROWN head-to-head against **toulbar2** (the
+*same* AND/OR-branch-and-bound + mini-bucket algorithm family, in tuned C++) and
+**SCIP**, on standard Sherrington–Kirkpatrick spin-glass and max-cut instances —
+see **[benchmarks/EXTERNAL_RESULTS.md](benchmarks/EXTERNAL_RESULTS.md)**. Two
+honest findings:
 
-Research-quality, fully tested (36/36) and benchmarked (above). Not yet compared
-head-to-head against state-of-the-art exact solvers (Gurobi, QPBO, toulbar2) —
-that comparison, plus a write-up, is the natural next step toward broad use.
+- **Correctness is corroborated by an independent SOTA solver.** CROWN's optima
+  matched toulbar2 on **20/20** instances and brute force on **8/8**; on the
+  **19** it reported as *certified* it matched toulbar2's proven optimum every
+  time; it never undercut a proven optimum and never certified a wrong one.
+- **CROWN is *not* performance-competitive.** toulbar2 was **~110× faster**
+  (median) — it proves in well under a second the spin-glasses that take CROWN
+  tens of seconds, and certifies n=28 instances that CROWN's pure-Python search
+  cannot certify at all. CROWN's value is the *verifiable certificate* and the
+  clean reference implementation — not raw solve speed.
+
+## Status & honest scope
+
+Research-quality, fully tested (36/36), benchmarked, and cross-validated against
+toulbar2/SCIP. To be clear about what CROWN is and isn't (see
+**[RELATED_WORK.md](RELATED_WORK.md)**):
+
+- The algorithms (roof duality, bucket/mini-bucket elimination, JGLP, AND/OR
+  search) are **established prior art**, implemented from scratch and validated.
+- Certified optimization is an **active field** (VeriPB / pseudo-Boolean proof
+  logging, MAP-MRF dual certificates); CROWN's certificate is classical LP/
+  Lagrangian duality + reparameterization. The most CROWN claims is a *compact,
+  arithmetic-checkable, hash-anchorable bound certificate for QUBO* — an
+  engineering/packaging contribution, not a new theorem.
+- It is **not** competitive with toulbar2/Gurobi on speed or scale.
+
+A genuine niche, if any, lies in the on-chain-verifiable certificate; the path to
+establishing that is in RELATED_WORK.md.
 
 ## License
 

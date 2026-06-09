@@ -326,6 +326,14 @@ as a packaged artifact for QUBO.** That gap is the opportunity.
 - ❌ "Gauge concentrates frustration" — false (§2).
 - ❌ "Solves NP-hard problems in P" — never; the core can stay exponential. The
   product is *distillation + certification*, not a complexity miracle.
+- ❌ "Competitive with / beating state-of-the-art solvers" — false. toulbar2 (same
+  algorithm family, tuned C++) is ~100–1000× faster and proves optima at sizes
+  CROWN can't certify (`benchmarks/EXTERNAL_RESULTS.md`). CROWN is a *correct*
+  (independently cross-validated) reference implementation, not a fast solver.
+- ❌ "The certificate idea is novel" — unverified and probably overstated.
+  Certified optimization is an active field (VeriPB, MAP-MRF dual certificates);
+  CROWN's certificate is classical LP/Lagrangian duality + reparameterization. See
+  **RELATED_WORK.md** for the honest positioning.
 
 ---
 
