@@ -84,11 +84,34 @@ examples/demo.py  six end-to-end regimes
 tests/            36 soundness + correctness tests (validated vs brute force)
 ```
 
+## Benchmarks
+
+`python benchmarks/run_benchmark.py` runs CROWN across four instance families and
+validates it end-to-end. From the latest full run (80 instances, n up to 44 —
+full table in **[benchmarks/RESULTS.md](benchmarks/RESULTS.md)**):
+
+- **Correctness:** **40/40** — CROWN's energy matched brute force on every
+  instance small enough to enumerate. It never returned a wrong optimum.
+- **Trustless verification:** **80/80** certificates independently re-verified,
+  with **0** optimality over-claims.
+- **Certified optimality:** 100% on the structured families; **90%** on
+  dense-random (n ≤ 44), of which **70%** carry the strongest fully-rigorous
+  `bound-tight` proof.
+- **Rigorous bound tightening:** full-problem JGLP cut the mean gap-to-optimum
+  from **6.04** (roof duality) to **0.25**.
+- **Scale:** on 40 instances beyond brute-force reach (up to 2⁴⁴), CROWN
+  returned a **certified** optimum **95%** of the time — proofs, not guesses.
+
+A simulated-annealing baseline reached the same optima at these sizes, but with
+*no proof of optimality* — CROWN's contribution is the certificate, not the
+search. External solvers (Gurobi / QPBO / dwave-neal) plug in via
+`EXTERNAL_SOLVERS` for head-to-head comparison.
+
 ## Status
 
-Research-quality, fully tested (36/36). Not yet benchmarked against
-state-of-the-art exact solvers (Gurobi, QPBO, toulbar2) — that comparison, plus a
-write-up, is the natural next step toward making this useful to others.
+Research-quality, fully tested (36/36) and benchmarked (above). Not yet compared
+head-to-head against state-of-the-art exact solvers (Gurobi, QPBO, toulbar2) —
+that comparison, plus a write-up, is the natural next step toward broad use.
 
 ## License
 
