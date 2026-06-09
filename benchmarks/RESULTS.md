@@ -1,6 +1,6 @@
 # CROWN benchmark results
 
-Generated 2026-06-09 14:23 UTC · 80 instances · families ['field-dominated', 'shell+core', 'random-sparse', 'random-dense'] · sizes [12, 16, 28, 44] · 5 seeds each.
+Generated 2026-06-09 17:48 UTC · 80 instances · families ['field-dominated', 'shell+core', 'random-sparse', 'random-dense'] · sizes [12, 16, 28, 44] · 5 seeds each.
 
 ## Correctness (vs brute force)
 
@@ -15,10 +15,10 @@ Generated 2026-06-09 14:23 UTC · 80 instances · families ['field-dominated', '
 
 | family | #inst | certified | rigorous `bound-tight` | mean compression | SA reached optimum | median t (CROWN) | median t (SA) |
 |---|---|---|---|---|---|---|---|
-| field-dominated | 20 | 100% | 100% | 100% | 100% | 5 ms | 51 ms |
-| shell+core | 20 | 100% | 100% | 39% | 100% | 5 ms | 50 ms |
-| random-sparse | 20 | 100% | 85% | 78% | 100% | 13 ms | 61 ms |
-| random-dense | 20 | 90% | 70% | 32% | 100% | 238 ms | 81 ms |
+| field-dominated | 20 | 100% | 100% | 100% | 100% | 5 ms | 52 ms |
+| shell+core | 20 | 100% | 100% | 39% | 100% | 5 ms | 51 ms |
+| random-sparse | 20 | 100% | 85% | 78% | 100% | 13 ms | 62 ms |
+| random-dense | 20 | 90% | 70% | 32% | 100% | 230 ms | 80 ms |
 
 ## Rigorous bound quality (certified instances, optimum known)
 

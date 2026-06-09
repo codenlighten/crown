@@ -28,9 +28,10 @@ from .search import (
 )
 from .andor import aobb_andor_mb_solve, build_static_mb_heuristic, StaticMBHeuristic
 from .rigorous import jglp_certificate, verify_jglp_certificate
+from .qubo_io import load_qubo, save_qubo, qubo_from_canonical
 from .solve import crown_solve, CrownResult, solve_core
 from .certificate import build_certificate, save_certificate, load_certificate
-from .verify import verify, qubo_from_canonical, VerificationReport
+from .verify import verify, VerificationReport
 
 __all__ = [
     "QUBO",
@@ -59,6 +60,9 @@ __all__ = [
     "SearchResult",
     "jglp_certificate",
     "verify_jglp_certificate",
+    "load_qubo",
+    "save_qubo",
+    "qubo_from_canonical",
     "crown_solve",
     "CrownResult",
     "solve_core",

@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: pip install -e .
+      - name: Tests
+        run: python tests/test_crown.py
+      - name: Benchmark smoke test (correctness + certificate self-check)
+        run: python benchmarks/run_benchmark.py --quick
+      - name: CLI smoke test
+        run: |
+          printf 'n 4\n0 0 -1\n1 1 -1\n0 1 2\n2 3 2\n' > /tmp/p.qubo
+          python -m crown solve /tmp/p.qubo --problem /tmp/p.json --cert /tmp/c.json
+          python -m crown verify /tmp/p.json /tmp/c.json

@@ -342,7 +342,9 @@ crown/
   rigorous.py     full-problem JGLP -> trustless pairwise-cluster lower-bound cert
   solve.py        the distill→reduce→solve→certify pipeline
   certificate.py  Proof-of-Collapse certificate construction
-  verify.py       trustless verifier (CLI: python -m crown.verify ...)
+  verify.py       trustless verifier
+  qubo_io.py      load/save QUBOs (canonical JSON + sparse triplets)
+  cli.py          the `crown` command-line interface (solve/verify/demo/bench)
   generators.py   structured test/demo instances
 examples/demo.py  two-regime end-to-end demo
 tests/test_crown.py  soundness tests (bound ≤ true min, tamper rejection, …)

@@ -1,5 +1,8 @@
 # CROWN — Certified QUBO/Ising Optimization with Proof-of-Collapse
 
+[![CI](https://github.com/codenlighten/crown/actions/workflows/ci.yml/badge.svg)](https://github.com/codenlighten/crown/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 CROWN is a classical optimizer for **QUBO / Ising** problems that returns not
 just a solution but a **machine-checkable proof of optimality** — one a third
 party (or a smart contract) can verify by *pure bounded arithmetic*, without
@@ -12,11 +15,24 @@ heuristic.
 > result is independently verifiable — *Proof-of-Collapse*.
 
 ```bash
-pip install -r requirements.txt
-python -m examples.demo          # six worked regimes, each solved + verified
-python tests/test_crown.py       # 36 soundness/correctness tests
-python -m crown.verify examples/C_wide_thin_core.problem.json \
-                        examples/C_wide_thin_core.cert.json   # trustless verifier
+pip install -e .          # or: pip install git+https://github.com/codenlighten/crown
+
+crown solve  problem.qubo --cert c.json --problem p.json   # solve + emit certificate
+crown verify p.json c.json                                 # trustless verification
+crown demo                                                 # six worked regimes
+crown bench --quick                                        # benchmark smoke run
+python tests/test_crown.py                                 # 36 tests
+```
+
+A problem file is either **canonical JSON** (`.json`) or **sparse triplets**
+(`.txt`/`.qubo`, one `i j value` term per line — `i==j` is linear). Or use the
+library directly:
+
+```python
+from crown import QUBO, crown_solve, build_certificate, verify
+res  = crown_solve(QUBO.from_matrix(my_matrix))
+cert = build_certificate(qubo, res)        # a Proof-of-Collapse certificate
+assert verify(qubo, cert).certified_optimal
 ```
 
 ## What it does
@@ -78,9 +94,12 @@ crown/
   rigorous.py     full-problem JGLP -> trustless pairwise-cluster bound certificate
   solve.py        the distill -> reduce -> solve -> certify pipeline
   certificate.py  Proof-of-Collapse certificate construction
-  verify.py       trustless verifier (CLI: python -m crown.verify ...)
+  verify.py       trustless verifier
+  qubo_io.py      load/save QUBOs (canonical JSON + sparse triplets)
+  cli.py          the `crown` command-line interface
   generators.py   structured test/demo instances
 examples/demo.py  six end-to-end regimes
+benchmarks/       benchmark harness + RESULTS.md
 tests/            36 soundness + correctness tests (validated vs brute force)
 ```
 

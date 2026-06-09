@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crown-qubo"
+version = "0.1.0"
+description = "Certified QUBO/Ising optimization with trustless Proof-of-Collapse certificates"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "codenlighten" }]
+keywords = ["qubo", "ising", "optimization", "roof-duality", "branch-and-bound",
+            "certificate", "proof-of-collapse", "verifiable-computation"]
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "networkx>=3.0",
+]
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+
+[project.urls]
+Homepage = "https://github.com/codenlighten/crown"
+Source = "https://github.com/codenlighten/crown"
+
+[project.scripts]
+crown = "crown.cli:main"
+
+[tool.setuptools]
+packages = ["crown"]

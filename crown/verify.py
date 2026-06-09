@@ -20,6 +20,7 @@ from typing import List
 
 from .elimination import min_fill_order, wide_core_bound
 from .ising import QUBO
+from .qubo_io import qubo_from_canonical
 from .reduce import reduce_qubo
 from .rigorous import verify_jglp_certificate
 from .roofdual import verify_dual_bound
@@ -49,12 +50,6 @@ class VerificationReport:
         lines.append(f"CERTIFIED OPTIMAL    : {self.certified_optimal}")
         lines.append(f"OVERALL              : {'ACCEPT' if self.ok else 'REJECT'}")
         return "\n".join(lines)
-
-
-def qubo_from_canonical(obj: dict) -> QUBO:
-    linear = {int(i): float(a) for i, a in obj.get("linear", [])}
-    quadratic = {(int(i), int(j)): float(b) for i, j, b in obj.get("quadratic", [])}
-    return QUBO(n=int(obj["n"]), linear=linear, quadratic=quadratic, const=float(obj.get("const", 0.0)))
 
 
 def verify(qubo: QUBO, cert: dict, tol: float = 1e-5) -> VerificationReport:
