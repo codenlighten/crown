@@ -92,6 +92,7 @@ crown/
   search.py       JGLP-guided AOBB, AND/OR-with-caching, component decomposition
   andor.py        static mini-bucket heuristic + bucket-tree cost-shifting
   rigorous.py     full-problem JGLP -> trustless pairwise-cluster bound certificate
+  circuit.py      certificate-as-arithmetic-circuit cost + validity-preserving minimiser
   solve.py        the distill -> reduce -> solve -> certify pipeline
   certificate.py  Proof-of-Collapse certificate construction
   verify.py       trustless verifier
@@ -155,8 +156,12 @@ toulbar2/SCIP. To be clear about what CROWN is and isn't (see
   engineering/packaging contribution, not a new theorem.
 - It is **not** competitive with toulbar2/Gurobi on speed or scale.
 
-A genuine niche, if any, lies in the on-chain-verifiable certificate; the path to
-establishing that is in RELATED_WORK.md.
+We probed the one possibly-open niche — a compact, transparent, on-chain
+optimality certificate for QUBO — and **closed it with evidence**
+(`benchmarks/CIRCUIT_RESULTS.md`): for hard frustrated instances the compact
+certificate usually doesn't exist (the integrality gap), and where it does the
+verification circuit grows exponentially with cluster scope. The honest verdict
+and landscape are in **[RELATED_WORK.md](RELATED_WORK.md)**.
 
 ## License
 

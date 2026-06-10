@@ -74,11 +74,50 @@ VeriPB proof from a QUBO solver, and (b) a use case where a *self-contained
 arithmetic* certificate beats a VeriPB proof + the VeriPB checker. That comparison
 has **not** been done and should gate any novelty claim.
 
-## Honest bottom line
+## Verifiable-computation landscape, and a circuit-cost determination
+
+We checked the one sliver that seemed possibly-open — *arithmetizing an
+integer-optimization optimality certificate for transparent on-chain / SNARK
+verification* — both in the literature and with a measurement (`benchmarks/
+circuit_size.py` → `CIRCUIT_RESULTS.md`).
+
+**Literature.** The space is occupied:
+- **Otti** (USENIX Sec '22, [eprint 2021/1436](https://eprint.iacr.org/2021/1436.pdf))
+  compiles optimization problems to R1CS and gives zk-SNARK proofs of optimality
+  with on-chain commitments — but for **convex** problems (LP/SDP/SGD), where the
+  dual certificate is *tight*.
+- **OSAC / VAC** ([Cooper et al.](https://www.irit.fr/publis/ADRIA/OSAC.pdf)) and
+  **Super-Reparametrizations of WCSPs** ([arXiv 2201.02018](https://arxiv.org/pdf/2201.02018))
+  are the reparameterization optimality certificate for *integer* cost-function
+  networks — exactly CROWN's certificate, already studied as an optimization
+  problem.
+- **VeriPB** provides machine-checkable proofs for pseudo-Boolean optimization
+  (which includes QUBO).
+
+**Measurement (the integer/convex divide as circuit cost).** QUBO is integer, so
+the convex dual has an **integrality gap**; CROWN needs higher-order JGLP clusters
+to close it, and each cluster of scope `s` costs `2^s` to verify. On standard
+Sherrington–Kirkpatrick and max-cut instances (toulbar2 supplying the optimum):
+
+- the compact certificate **certified only 1–2 of 10 instances** (0/10 spin
+  glasses) at i-bound ≤ 10 — for genuinely frustrated QUBO the relaxation has a gap
+  the certificate cannot close at any tractable cluster size;
+- where it *did* certify, the circuit grew steeply (170 → 2120 R1CS constraints
+  from n=12 → n=20), driven by `Σ_c 2^{scope_c}`.
+
+So the integer case has no free lunch: a small i-bound is cheap but rarely
+certifies; a large one certifies more but the circuit blows up exponentially. This
+is precisely why Otti's convex approach works and the integer analogue does not.
+
+## Honest bottom line — go/no-go: **no-go on the niche**
 
 CROWN is a correct, well-tested, verifiable **reference implementation** of the
-certified-optimization stack for QUBO. It is valuable as a teaching/clean-room
-artifact and as a substrate for the on-chain-verification idea. It is **not** a new
-algorithm, **not** performance-competitive with toulbar2/Gurobi, and its
-certificate sits inside an existing, active research area. Claims in this repo are
-scoped to match that.
+certified-optimization stack for QUBO — valuable as a clean-room/teaching artifact.
+It is **not** a new algorithm, **not** performance-competitive with toulbar2/Gurobi,
+and its certificate sits inside an active research area (Otti / OSAC / VeriPB). The
+one possibly-open niche — a compact, transparent, on-chain optimality certificate
+for QUBO — **does not survive measurement**: for the hard frustrated instances that
+would matter, the compact certificate usually does not exist (integrality gap), and
+where it does the verification circuit grows exponentially with the gap-closing
+cluster scope. We are ending the novelty chase here, with evidence, rather than
+building on a guess. Claims in this repo are scoped to match all of the above.

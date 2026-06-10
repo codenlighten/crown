@@ -28,6 +28,7 @@ from .search import (
 )
 from .andor import aobb_andor_mb_solve, build_static_mb_heuristic, StaticMBHeuristic
 from .rigorous import jglp_certificate, verify_jglp_certificate
+from .circuit import certificate_cost, minimize_certificate, CertificateCost
 from .qubo_io import load_qubo, save_qubo, qubo_from_canonical
 from .solve import crown_solve, CrownResult, solve_core
 from .certificate import build_certificate, save_certificate, load_certificate
@@ -60,6 +61,9 @@ __all__ = [
     "SearchResult",
     "jglp_certificate",
     "verify_jglp_certificate",
+    "certificate_cost",
+    "minimize_certificate",
+    "CertificateCost",
     "load_qubo",
     "save_qubo",
     "qubo_from_canonical",

@@ -428,6 +428,42 @@ def test_frustrated_demos_are_rigorously_bound_tight():
     assert verify(qubo, cert).ok and verify(qubo, cert).certified_optimal
 
 
+def test_certificate_cost_formula():
+    from crown.circuit import certificate_cost
+    qubo = QUBO(n=4, linear={0: 1.0}, quadratic={(0, 1): 2.0, (2, 3): 2.0})  # m_Q = 2
+    cert = {"const": 0.0, "clusters": [
+        {"vars": [0, 1], "const": 0.0, "linear": [[0, 1.0]], "quadratic": [[0, 1, 2.0]]},
+        {"vars": [1, 2, 3], "const": 0.0, "linear": [], "quadratic": [[2, 3, 2.0]]},
+    ]}
+    c = certificate_cost(qubo, cert)
+    assert c.mults == 2                                  # one per quadratic term of Q
+    assert c.r1cs_constraints == 2 + (2 ** 2 + 2 ** 3)   # m_Q + Σ_c 2^scope = 2 + 12
+    assert c.max_scope == 3
+
+
+def test_minimizer_preserves_certificate():
+    from crown.rigorous import jglp_certificate, verify_jglp_certificate
+    from crown.circuit import certificate_cost, minimize_certificate
+    qubo = make_shell_with_core(shell=30, n_triangles=2, seed=1)
+    cert, lb = jglp_certificate(qubo, ibound=8)
+    cmin = minimize_certificate(cert)
+    ok, vlb, _ = verify_jglp_certificate(qubo, cmin)
+    assert ok                                            # minimised cert still sums to Q
+    assert abs(vlb - lb) < 1e-6                           # and proves the same bound
+    assert (certificate_cost(qubo, cmin).r1cs_constraints
+            <= certificate_cost(qubo, cert).r1cs_constraints)
+
+
+def test_scope_pruning_is_lossless():
+    from crown.circuit import minimize_certificate
+    # variable 2 has no coefficient in the cluster -> must be pruned from its scope
+    cert = {"const": 0.0, "clusters": [
+        {"vars": [0, 1, 2], "const": 0.0, "linear": [[0, 1.0]], "quadratic": [[0, 1, 1.0]]},
+    ]}
+    out = minimize_certificate(cert)
+    assert out["clusters"][0]["vars"] == [0, 1]
+
+
 def test_elimination_scales_to_wide_thin_core():
     # 90 variables -> 2^90 by brute force, but treewidth 2
     qubo = make_shell_with_core(shell=0, n_triangles=30, seed=1)
